@@ -58,7 +58,3 @@ processResources
                 exclude '**/reference.properties'
             }
         }
-
-jar {
-    appendix = config.mc_version
-}

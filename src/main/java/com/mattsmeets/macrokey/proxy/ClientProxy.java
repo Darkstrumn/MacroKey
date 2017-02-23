@@ -3,6 +3,7 @@ package com.mattsmeets.macrokey.proxy;
 
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.handler.GuiEventHandler;
+import com.mattsmeets.macrokey.handler.IngameEventHandler;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -15,6 +16,7 @@ public class ClientProxy extends CommonProxy {
 
     public void registerClient(){
         MinecraftForge.EVENT_BUS.register(new GuiEventHandler());
+        MinecraftForge.EVENT_BUS.register(new IngameEventHandler());
 
 
         MacroKey.forgeKeybindings = new KeyBinding[1];

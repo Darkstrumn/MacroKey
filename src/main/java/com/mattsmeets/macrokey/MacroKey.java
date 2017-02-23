@@ -1,5 +1,10 @@
 package com.mattsmeets.macrokey;
 
+import com.mattsmeets.macrokey.object.BoundKey;
+import com.mattsmeets.macrokey.object.Layer;
+import com.mattsmeets.macrokey.proxy.CommonProxy;
+import com.mattsmeets.macrokey.util.JsonConfig;
+import com.mattsmeets.macrokey.util.LogHelper;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
@@ -7,18 +12,15 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import com.mattsmeets.macrokey.proxy.*;
-import com.mattsmeets.macrokey.util.*;
-import com.mattsmeets.macrokey.object.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Matt on 3/30/2016.
  */
 @Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME, useMetadata = true, clientSideOnly=true, guiFactory = Reference.GUI_FACTORY, updateJSON = "https://bitbucket.org/MattsMc/versionchecking/raw/master/macrokey.json")
 public class MacroKey {
-
     @Mod.Instance
     public static MacroKey instance;
 
@@ -32,6 +34,7 @@ public class MacroKey {
     public JsonConfig jsonConfig;
 
     public ArrayList<BoundKey> boundKeys;
+    public List<Layer> layers;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
@@ -50,8 +53,10 @@ public class MacroKey {
         configuration.load();
 
         jsonConfig = new JsonConfig(event.getSuggestedConfigurationFile());
-        jsonConfig.loadKeybindings();
-
+        {
+            jsonConfig.loadLayers();
+            jsonConfig.loadKeybindings();
+        }
     }
 
     @Mod.EventHandler
@@ -66,6 +71,5 @@ public class MacroKey {
     public void postInit(FMLPostInitializationEvent event) {
         LogHelper.debug("PostInit");
     }
-
 
 }

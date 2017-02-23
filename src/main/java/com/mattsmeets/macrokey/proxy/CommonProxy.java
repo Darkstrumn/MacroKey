@@ -1,9 +1,7 @@
 package com.mattsmeets.macrokey.proxy;
 
 import com.mattsmeets.macrokey.MacroKey;
-import com.mattsmeets.macrokey.event.WorldEvents;
-import com.mattsmeets.macrokey.handler.GuiHandler;
-import net.minecraftforge.common.MinecraftForge;
+import com.mattsmeets.macrokey.handler.IngameEventHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 /**
@@ -16,7 +14,7 @@ public class CommonProxy {
 
     public void globalRegister(){
         //MinecraftForge.EVENT_BUS.register(new WorldEvents());
-        NetworkRegistry.INSTANCE.registerGuiHandler(MacroKey.instance, new GuiHandler());
+        NetworkRegistry.INSTANCE.registerGuiHandler(MacroKey.instance, new IngameEventHandler());
     }
 
 }

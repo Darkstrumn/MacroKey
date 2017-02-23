@@ -38,5 +38,7 @@ public class Reference {
     public static final String GUI_FACTORY = "com.mattsmeets.macrokey.gui.config.GuiFactoryConfig";
 
     public static final Integer MACROKEY_OPTIONS_BUTTON = 5003;
+    public static final Integer MACROKEY_INGAME_LAYER_TOGGLE = 5004;
+
 
 }

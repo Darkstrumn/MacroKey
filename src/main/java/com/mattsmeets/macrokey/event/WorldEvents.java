@@ -1,8 +1,8 @@
 package com.mattsmeets.macrokey.event;
 
 import com.mattsmeets.macrokey.MacroKey;
+import com.mattsmeets.macrokey.object.Layer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,7 +23,8 @@ public class WorldEvents {
                 String message = I18n.translateToLocal("chat.join");
 
                 message = message.replace("%tag%", I18n.translateToLocal("chat.tag"));
-                message = message.replace("%loaded%", MacroKey.instance.boundKeys.size()+"");
+                message = message.replace("%loaded%", Layer.getActiveKeys().size()+"");
+                message = message.replace("%total%", MacroKey.instance.boundKeys.size()+"");
 
                 if(MacroKey.instance.configuration.getBoolean("isSpawnMessageEnabled",MacroKey.instance.configuration.CATEGORY_GENERAL, true, "set this to false if you are getting annoyed by the spam")) {
                     Minecraft.getMinecraft().player.sendChatMessage(message);

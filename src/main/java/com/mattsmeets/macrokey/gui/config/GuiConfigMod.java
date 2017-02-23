@@ -12,7 +12,8 @@ import net.minecraftforge.fml.client.config.GuiConfig;
  * Created by Matt on 4/4/2016.
  */
 public class GuiConfigMod extends GuiConfig {
-    public GuiConfigMod(GuiScreen parent) {
+    public GuiConfigMod(GuiScreen parent)
+    {
         super(parent,
                 new ConfigElement(
                         MacroKey.instance.configuration.getCategory(Configuration.CATEGORY_GENERAL))
@@ -25,18 +26,24 @@ public class GuiConfigMod extends GuiConfig {
     }
 
     @Override
-    public void initGui() {
+    public void initGui()
+    {
+        // You can add buttons and initialize fields here
         super.initGui();
     }
 
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        // You can do things like create animations, draw additional elements, etc. here
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) {
+    protected void actionPerformed(GuiButton button)
+    {
+        // You can process any additional buttons you may have added here
         super.actionPerformed(button);
     }
 }

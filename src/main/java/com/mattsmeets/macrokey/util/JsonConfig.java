@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.object.BoundKey;
+import com.mattsmeets.macrokey.object.Layer;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Property;
 
@@ -21,24 +22,26 @@ import java.util.Map;
  */
 public class JsonConfig {
 
-    private File file;
+    private static File keybindingFile;
+    private static File layerFile;
 
     public JsonConfig(File file){
-        this.file = new File(file.getParent()+"/macrokey/keybindings.json");
-        MacroKey.instance.boundKeys = new ArrayList();
+        this.keybindingFile = new File(file.getParent()+"/macrokey/keybindings.json");
+        this.layerFile = new File(file.getParent()+"/macrokey/layers.json");
+
+
+        MacroKey.instance.boundKeys = new ArrayList<BoundKey>();
+        MacroKey.instance.layers = new ArrayList<Layer>();
+
 
         File dir = new File(file.getParent()+"/macrokey/");
         if(!dir.exists()){
             dir.mkdir();
         }
 
-        if(!this.file.exists()){
-            try {
-                this.file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        FileHelper.fileExist(keybindingFile);
+        FileHelper.fileExist(layerFile);
+
 
         ConfigCategory category = MacroKey.instance.configuration.getCategory("bindings");
         if(!category.isEmpty()){
@@ -49,13 +52,15 @@ public class JsonConfig {
         }
     }
 
+
+
     public void loadKeybindings() {
         MacroKey.instance.boundKeys.clear();
 
         JsonParser parser = new JsonParser();
         JsonElement root = null;
         try {
-            root = parser.parse(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            root = parser.parse(new InputStreamReader(new FileInputStream(keybindingFile), "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -68,9 +73,28 @@ public class JsonConfig {
         }
     }
 
-    public void saveKeybinding(){
+    public void loadLayers(){
+        MacroKey.instance.layers.clear();
+
+        JsonParser parser = new JsonParser();
+        JsonElement root = null;
         try {
-            Writer writer = new FileWriter(file);
+            root = parser.parse(new InputStreamReader(new FileInputStream(layerFile), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (root.isJsonArray()) {
+            Gson gson = new GsonBuilder().create();
+            Layer[] r = gson.fromJson(root, Layer[].class);
+            MacroKey.instance.layers.addAll(Arrays.asList(r));
+        }
+    }
+
+    public static void saveKeybinding(){
+        try {
+            Writer writer = new FileWriter(keybindingFile);
             Gson gson = new GsonBuilder().create();
             gson.toJson(MacroKey.instance.boundKeys.toArray(new BoundKey[0]), writer);
             writer.close();
@@ -79,20 +103,29 @@ public class JsonConfig {
         }
     }
 
-    public void addKeybinding(BoundKey boundKey){
-        MacroKey.instance.boundKeys.add(boundKey);
-        saveKeybinding();
+    public static void saveLayers(){
+        try {
+            Writer writer = new FileWriter(layerFile);
+            Gson gson = new GsonBuilder().create();
+            gson.toJson(MacroKey.instance.layers.toArray(new Layer[0]), writer);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Provide comparability for older versions
+     */
     public void convertConfig(){
         MacroKey.instance.configuration.load();
         Map<String, Property> map = Maps.newHashMap();
 
         ConfigCategory category = MacroKey.instance.configuration.getCategory("bindings");
         for (Map.Entry<String, Property> entry : category.entrySet()) {
-            addKeybinding(new BoundKey(Integer.parseInt(entry.getKey()), entry.getValue().getString(), false));
+            BoundKey.addKeybinding(new BoundKey(Integer.parseInt(entry.getKey()), entry.getValue().getString(), false, true));
         }
-
     }
 
 }
+
